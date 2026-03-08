@@ -1,0 +1,17 @@
+# ROS2 build
+build/
+install/
+log/
+
+# Python
+__pycache__/
+*.pyc
+
+# vscode
+.vscode/
+
+# env
+.env
+
+# API keys
+*.key

@@ -17,4 +17,4 @@ __pycache__/
 *.key
 
 #video*.mp4
-*.mp4
+#*.mp4

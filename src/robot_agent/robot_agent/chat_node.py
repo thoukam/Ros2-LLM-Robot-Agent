@@ -25,9 +25,10 @@ def main(args=None) -> None:
             result = agent.run(user_message)
 
             print(f"Robot: {result['assistant_response']}")
-            print(f"Intent: {result['intent']}")
-            print(f"Should execute: {result['should_execute']}")
-            print(f"Actions: {result['actions']}\n")
+            #print(f"Intent: {result['intent']}")
+            #print(f"Should execute: {result['should_execute']}")
+            #print(f"Actions: {result['actions']}\n")
+            print("  ")
 
             if result["should_execute"]:
                 executor.execute_plan(result["actions"])

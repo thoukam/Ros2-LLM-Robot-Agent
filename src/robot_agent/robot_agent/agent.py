@@ -32,9 +32,9 @@ class ConversationalRobotAgent:
             )
 
             raw = response.choices[0].message.content
-            print("\n[DEBUG] Raw model output:")
-            print(raw)
-            print()
+            #print("\n[DEBUG] Raw model output:")
+            #print(raw)
+            #print()
 
             parsed = json.loads(raw)
             validated = validate_agent_output(parsed)

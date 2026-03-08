@@ -15,3 +15,6 @@ __pycache__/
 
 # API keys
 *.key
+
+#video*.mp4
+*.mp4

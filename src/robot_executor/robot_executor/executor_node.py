@@ -68,7 +68,7 @@ class RobotExecutor(Node):
 
     def execute_plan(self, actions: List[Dict]) -> None:
         for action in actions:
-            self.get_logger().info(f"Executing: {action}")
+            #self.get_logger().info(f"Executing: {action}")
             self.execute_action(action)
 
 

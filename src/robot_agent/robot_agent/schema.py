@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import Any, Dict
 
 
@@ -6,6 +7,7 @@ ALLOWED_INTENTS = {
     "robot_action",
     "clarification",
     "unsafe_or_forbidden",
+    "system_error",
 }
 
 ALLOWED_ACTIONS = {

@@ -1,9 +1,10 @@
+from __future__ import annotations
 from typing import Any, Dict
 
 from robot_agent.schema import ALLOWED_ACTIONS, ALLOWED_INTENTS
 
 
-MAX_DISTANCE_M = 2.0
+MAX_DISTANCE_M = 6.0
 MAX_ANGLE_DEG = 180.0
 MAX_DURATION_S = 10.0
 

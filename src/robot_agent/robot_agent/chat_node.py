@@ -1,41 +1,75 @@
+from __future__ import annotations
+
 import rclpy
+from rclpy.node import Node
 
 from robot_agent.agent import ConversationalRobotAgent
 from robot_executor.executor_node import RobotExecutor
 
 
+class ChatNode(Node):
+    def __init__(self) -> None:
+        super().__init__("chat_node")
+
+        self.declare_parameter("llm_provider", "ollama")
+        self.declare_parameter("llm_model", "llama3")
+        self.declare_parameter("ollama_host", "http://localhost:11434")
+
+        provider = self.get_parameter("llm_provider").value
+        model = self.get_parameter("llm_model").value
+        ollama_host = self.get_parameter("ollama_host").value
+
+        self.get_logger().info(
+            f"Starting chat_node with provider={provider}, model={model}"
+        )
+
+        self.agent = ConversationalRobotAgent(
+            provider=provider,
+            model=model,
+            ollama_host=ollama_host,
+        )
+
+        self.robot_executor = RobotExecutor()
+
+    def run_chat(self) -> None:
+        print("Robot chat ready. Tape 'quit' pour quitter.\n")
+
+        try:
+            while rclpy.ok():
+                user_message = input("You: ").strip()
+                print("  ")
+
+                if user_message.lower() in {"quit", "exit"}:
+                    break
+
+                if not user_message:
+                    continue
+
+                result = self.agent.run(user_message)
+
+                if result["intent"] != "system_error":
+                    print(f"Robot: {result['assistant_response']}")
+                else:
+                    print(f"[SYSTEM] {result['assistant_response']}")
+                print("  ")
+
+                if result["should_execute"]:
+                    self.robot_executor.execute_plan(result["actions"])
+
+        finally:
+            self.robot_executor.stop()
+            self.robot_executor.destroy_node()
+
+
 def main(args=None) -> None:
     rclpy.init(args=args)
 
-    agent = ConversationalRobotAgent()
-    executor = RobotExecutor()
-
-    print("Robot chat ready. Tape 'quit' pour quitter.\n")
+    node = ChatNode()
 
     try:
-        while True:
-            user_message = input("You: ").strip()
-
-            if user_message.lower() in {"quit", "exit"}:
-                break
-
-            if not user_message:
-                continue
-
-            result = agent.run(user_message)
-
-            print(f"Robot: {result['assistant_response']}")
-            #print(f"Intent: {result['intent']}")
-            #print(f"Should execute: {result['should_execute']}")
-            #print(f"Actions: {result['actions']}\n")
-            print("  ")
-
-            if result["should_execute"]:
-                executor.execute_plan(result["actions"])
-
+        node.run_chat()
     finally:
-        executor.stop()
-        executor.destroy_node()
+        node.destroy_node()
         rclpy.shutdown()
 
 

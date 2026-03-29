@@ -18,3 +18,8 @@ __pycache__/
 
 #video*.mp4
 #*.mp4
+
+
+#documentation
+docs/
+diagrams/

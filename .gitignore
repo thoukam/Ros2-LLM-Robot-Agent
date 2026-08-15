@@ -6,12 +6,26 @@ log/
 # Python
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.eggs/
+dist/
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+.mypy_cache/
+.ruff_cache/
 
 # vscode
 .vscode/
 
 # env
 .env
+.venv/
+venv/
+env/
 
 # API keys
 *.key

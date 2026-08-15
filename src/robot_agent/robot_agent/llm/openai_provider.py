@@ -19,7 +19,7 @@ class OpenAIProvider(BaseLLMProvider):
     def generate(self, messages: List[Dict[str, str]]) -> str:
         response = self.client.chat.completions.create(
             model=self.model,
-            temperature=0,
+            #temperature=0,
             response_format={"type": "json_object"},
             messages=messages,
         )

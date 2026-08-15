@@ -11,7 +11,7 @@ setup(
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
     ],
-    install_requires=['setuptools'],
+    install_requires=['setuptools', 'openai', 'anthropic', 'mistralai', 'requests'],
     zip_safe=True,
     maintainer='roboticslab',
     maintainer_email='thoukamy@gmail.com',
@@ -24,7 +24,8 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'chat_node = robot_agent.chat_node:main',
+            'chat_node = robot_agent.run_chat_node:main',
+            'chat_node_direct = robot_agent.chat_node:main',
         ],
     },
 )

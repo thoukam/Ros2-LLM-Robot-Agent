@@ -4,6 +4,7 @@ import rclpy
 from rclpy.node import Node
 
 from robot_agent.agent import ConversationalRobotAgent
+from robot_agent.ros_graph import ROSGraphInspector
 from robot_executor.executor_node import RobotExecutor
 
 
@@ -23,19 +24,24 @@ class ChatNode(Node):
             f"Starting chat_node with provider={provider}, model={model}"
         )
 
+        self.robot_executor = RobotExecutor()
+        self.graph_inspector = ROSGraphInspector(self)
+        graph_context = self.graph_inspector.summarize_graph()
+
         self.agent = ConversationalRobotAgent(
             provider=provider,
             model=model,
             ollama_host=ollama_host,
+            robot_context=graph_context,
         )
-
-        self.robot_executor = RobotExecutor()
 
     def run_chat(self) -> None:
         print("Robot chat ready. Tape 'quit' pour quitter.\n")
 
         try:
             while rclpy.ok():
+                rclpy.spin_once(self, timeout_sec=0.05)
+                rclpy.spin_once(self.robot_executor, timeout_sec=0.05)
                 user_message = input("You: ").strip()
                 print("  ")
 
@@ -44,6 +50,15 @@ class ChatNode(Node):
 
                 if not user_message:
                     continue
+
+                graph_context = self.graph_inspector.summarize_graph()
+                graph_context += "\n\n" + self.graph_inspector.summarize_tf()
+                graph_context += "\n\n" + self.robot_executor.get_obstacle_status()
+                graph_context += "\n\n" + self.robot_executor.get_diagnostics()
+                graph_context += "\n\n" + self.robot_executor.get_execution_status()
+                graph_context += "\n\n" + self.robot_executor.get_motion_status()
+                graph_context += "\n\n" + self.graph_inspector.summarize_rosout()
+                self.agent.update_robot_context(graph_context)
 
                 result = self.agent.run(user_message)
 
@@ -57,6 +72,7 @@ class ChatNode(Node):
                     self.robot_executor.execute_plan(result["actions"])
 
         finally:
+            self.robot_executor.shutdown_launch_processes()
             self.robot_executor.stop()
             self.robot_executor.destroy_node()
 

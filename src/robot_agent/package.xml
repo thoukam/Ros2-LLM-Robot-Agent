@@ -8,6 +8,7 @@
   <license>TODO: License declaration</license>
 
   <depend>rclpy</depend>
+  <depend>rcl_interfaces</depend>
   <depend>robot_executor</depend>
 
   <test_depend>ament_copyright</test_depend>

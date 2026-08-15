@@ -1,6 +1,8 @@
 from __future__ import annotations
 from typing import Any, Dict
 
+from robot_executor.software_catalog import ALLOWED_EXECUTABLES, ALLOWED_LAUNCH_FILES
+
 
 ALLOWED_INTENTS = {
     "conversation",
@@ -17,7 +19,13 @@ ALLOWED_ACTIONS = {
     "turn_right",
     "stop",
     "wait",
+    "launch_file",
+    "stop_launch",
+    "start_executable",
+    "stop_executable",
 }
+
+ALLOWED_TARGETS = {"robot", "mannequin"}
 
 
 def fallback_response() -> Dict[str, Any]:
